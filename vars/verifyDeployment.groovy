@@ -17,6 +17,7 @@ def call(ClusterInput input) {
         openshift.withProject("${input.projectName}") {
             def dcObj = openshift.selector("dc", input.targetApp).object()
             def podSelector = openshift.selector("pod", [deployment: "${input.targetApp}-${dcObj.status.latestVersion}"])
+            echo "about to enter loop"
             podSelector.untilEach {
                 echo "pod: ${it.name()}"
                 return it.object().status.containerStatuses[0].ready
